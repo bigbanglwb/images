@@ -1,0 +1,36 @@
+# thrift-client.yaml
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: thrift-client
+spec:
+  type: ClusterIP
+  ports:
+  - port: 80
+    targetPort: 8013 
+  selector:
+    app: thrift-client
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: thrift-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: thrift-client
+  template:
+    metadata:
+      labels:
+        app: thrift-client
+    spec:
+      containers:
+      - name: thrift-client
+        image: thrift-client:v1
+        imagePullPolicy: Never
+        command : ["/bin/bash","-c","--"]
+        args: ["while true;do sleep 10;done"]
+        ports:
+        - containerPort: 8013
